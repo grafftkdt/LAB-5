@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file           : main.c
+ * @brief          : Main program body
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -32,7 +32,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
 #define CAPTURENUM 16
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,11 +61,11 @@ int32_t DiffTime[CAPTURENUM-1] = { 0 };
 //Mean difftime
 float MeanTime = 0;
 
-//for microsecond measurement
-uint64_t _micros = 0;
-
 //rpm of motor
 float RPM = 0;
+
+//for microsecond measurement
+uint64_t _micros = 0;
 
 /* USER CODE END PV */
 
@@ -75,11 +77,9 @@ static void MX_USART2_UART_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
-
 //Read speed of encoder
 void encoderSpeedReaderCycle();
 uint64_t micros();
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -120,35 +120,32 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
-
-	  //start Microsec timer
-  	  HAL_TIM_Base_Start_IT(&htim5);
-
-  	  //start Input capture in DMA
-  	  HAL_TIM_Base_Start(&htim2);
-  	  HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, (uint32_t*) &capturedata,CAPTURENUM);
-
-  	  uint64_t timestamp =0;
-
+  	  //start Microsec timer
+	HAL_TIM_Base_Start_IT(&htim5);
+	//start Input capture in DMA
+	HAL_TIM_Base_Start(&htim2);
+	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, (uint32_t*) &capturedata,
+			CAPTURENUM);
+	uint64_t timestamp =0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  //read Time of encoder
-	  		encoderSpeedReaderCycle();
+	while (1) {
+		//read Time of encoder
+		encoderSpeedReaderCycle();
 
-	  		if(micros()-timestamp > 1000000)
-	  		{
-	  			timestamp = micros();
-	  			HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
-	  		}
+		if(micros()-timestamp > 1000000)
+		{
+			timestamp = micros();
+			HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
+		}
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
-  }
+	}
   /* USER CODE END 3 */
 }
 
@@ -384,7 +381,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void encoderSpeedReaderCycle() {
 	//get DMA Position form number of data
-	uint32_t CapPos =CAPTURENUM - __HAL_DMA_GET_COUNTER(htim2.hdma[TIM_DMA_ID_CC1]);
+	uint32_t CapPos =CAPTURENUM -  __HAL_DMA_GET_COUNTER(htim2.hdma[TIM_DMA_ID_CC1]);
 	uint32_t sum = 0 ;
 
 	//calculate diff from all buffer
@@ -402,11 +399,11 @@ void encoderSpeedReaderCycle() {
 
 	//mean all 15 Diff
 	MeanTime =sum / (float)(CAPTURENUM-1);
-	RPM = 1000000*60/(MeanTime*768);		//gear ratio 1: 64, 12 P/R >> 64*12=768
+	RPM = 1000000*60/(MeanTime*768);
 }
 uint64_t micros()
 {
-	return _micros + htim5.Instance->CNT; //counter for Timer5
+	return _micros + htim5.Instance->CNT;
 }
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -424,11 +421,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 
