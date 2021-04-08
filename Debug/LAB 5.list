@@ -1157,7 +1157,7 @@ void encoderSpeedReaderCycle() {
 	}
 
 	//mean all 15 Diff
-	MeanTime =sum / (float)(CAPTURENUM-1);
+	MeanTime =sum / (float)(CAPTURENUM-1);		//meantime คือเวลาที่ระหว่างใบพัด		//meantime มาก RPM น้อย
  80009a6:	687b      	ldr	r3, [r7, #4]
  80009a8:	ee07 3a90 	vmov	s15, r3
  80009ac:	eeb8 7a67 	vcvt.f32.u32	s14, s15

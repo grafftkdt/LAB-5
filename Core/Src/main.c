@@ -397,7 +397,7 @@ void encoderSpeedReaderCycle() {
 	}
 
 	//mean all 15 Diff
-	MeanTime =sum / (float)(CAPTURENUM-1);
+	MeanTime =sum / (float)(CAPTURENUM-1);		//meantime คือเวลาที่ระหว่างใบพัด		//meantime มาก RPM น้อย
 	RPM = 60*1000000/(MeanTime*768);			// 1 T >> motor rotates 768 (64*12)		//RPM >> f = 1/T = 1/((meantime/1000000)*768)  (rev per seconds)
 }																						//RPM = (60*1000000)/(meantime*768) (rev per minute)
 uint64_t micros()
