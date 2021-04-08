@@ -124,8 +124,7 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim5);
 	//start Input capture in DMA
 	HAL_TIM_Base_Start(&htim2);
-	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, (uint32_t*) &capturedata,
-			CAPTURENUM);
+	HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, (uint32_t*) &capturedata,CAPTURENUM);
 	uint64_t timestamp =0;
   /* USER CODE END 2 */
 
@@ -135,7 +134,7 @@ int main(void)
 		//read Time of encoder
 		encoderSpeedReaderCycle();
 
-		if(micros()-timestamp > 1000000)
+		if(micros()-timestamp > 100000)		//Blink 5 Hz
 		{
 			timestamp = micros();
 			HAL_GPIO_TogglePin(LD2_GPIO_Port,LD2_Pin);
@@ -399,8 +398,8 @@ void encoderSpeedReaderCycle() {
 
 	//mean all 15 Diff
 	MeanTime =sum / (float)(CAPTURENUM-1);
-	RPM = 1000000*60/(MeanTime*768);
-}
+	RPM = 60*1000000/(MeanTime*768);			// 1 T >> motor rotates 768 (64*12)		//RPM >> f = 1/T = 1/((meantime/1000000)*768)  (rev per seconds)
+}																						//RPM = (60*1000000)/(meantime*768) (rev per minute)
 uint64_t micros()
 {
 	return _micros + htim5.Instance->CNT;
